@@ -18,6 +18,11 @@ function addCouple() {
         couple_input.placeholder = 'Enter participant '.concat(i + 1);
 
         coupleContainer.appendChild(couple_input);
+        if (i === 0) {
+            const and = document.createElement('span');
+            and.innerHTML = ' and ';
+            coupleContainer.appendChild(and);
+        }
     }
     couplesContainer.appendChild(coupleContainer);
 }
@@ -56,15 +61,15 @@ function generateSecretSanta() {
     // Tableau pour stocker les paires de donneur-receveur
     let secretSantaPairs = [];
 
-    // Fonction pour vérifier si une paire viole une règle
-    function violatesRules(giver, receiver) {
-        // Vérifie si la réciprocité est violée
+    // Fonction pour vérifier si une paire va à l'encontre d'une règle
+    function breaksRules(giver, receiver) {
+        // Vérifie si la réciprocité est cassée
         for (let pair of secretSantaPairs) {
             if (pair.giver === receiver && pair.receiver === giver) {
                 return true;
             }
         }
-        // Vérifie si le couple est violé
+        // Vérifie si la règle du couple est cassée
         for (let couple of couples) {
             if ((couple[0] === giver && couple[1] === receiver) ||
                 (couple[1] === giver && couple[0] === receiver)) {
@@ -74,9 +79,9 @@ function generateSecretSanta() {
         return false;
     }
 
-    // Fonction pour choisir un receveur pour un donneur donné
+    // Fonction pour choisir un receveur pour un donneur choisi
     function chooseReceiver(giver) {
-        let validReceivers = remainingParticipants.filter(receiver => receiver !== giver && !violatesRules(giver, receiver));
+        let validReceivers = remainingParticipants.filter(receiver => receiver !== giver && !breaksRules(giver, receiver));
         if (validReceivers.length === 0) {
             // Si aucun receveur valide n'est trouvé, réinitialiser et recommencer
             remainingParticipants = participants.slice();
